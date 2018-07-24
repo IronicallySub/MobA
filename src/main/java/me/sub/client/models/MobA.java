@@ -1,11 +1,13 @@
 package me.sub.client.models;
 
-import java.util.Random;
-
 import me.sub.common.entity.EntityMobA;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
+
+import java.util.Random;
 
 public class MobA extends ModelBase
 {
@@ -70,14 +72,22 @@ public class MobA extends ModelBase
         this.mouth_rb.rotateAngleY = Math.max(0.0F, (float)Math.abs(Math.sin(time * 0.1D)) * 0.7853982F);
         this.mouth_rb.rotateAngleX = Math.max(0.0F, (float)Math.abs(Math.sin(time * 0.1D)) * 0.3926991F);
 
+        tongue.isHidden = false;
         if(entityIn instanceof EntityMobA) {
             EntityMobA mob = (EntityMobA) entityIn;
-         //   if(mob.isOnSameTeam(entityIn)){
-                tongue.isHidden = true;
-        //    }
+            if (mob.getTarget() != -1) {
+                Entity e = entityIn.world.getEntityByID(mob.getTarget());
+                // if(e != null) {
+                System.out.println("sdfsdfdsfsd");
+                int distanceToEntity = MathHelper.ceil(e.getDistanceToEntity(mob));
+                GlStateManager.scale(distanceToEntity * 22, 0, 0);
+                //  }
+                tongue.render(scale);
+            } else {
+                this.tongue.offsetZ = Math.max(0.0F, (float) Math.sin(time * 0.4D) * 0.3926991F);
+            }
         }
 
-        this.tongue.offsetZ = Math.max(0.0F, (float)Math.sin(time * 0.4D) * 0.3926991F);
         this.head.render(scale);
     }
 

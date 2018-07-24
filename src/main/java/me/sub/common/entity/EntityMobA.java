@@ -1,21 +1,19 @@
 package me.sub.common.entity;
 
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IRangedAttackMob;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemFishingRod;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class EntityMobA extends EntityMob implements IRangedAttackMob {
 
@@ -67,6 +65,13 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         public void onUpdate() {
         super.onUpdate();
 
+            if (getTarget() != -1) {
+                //   Entity e = world.getEntityByID(getTarget());
+                //   if(e.isDead) {
+                //        setTarget(-1);
+                //     }
+            }
+
             /*
              * Adding blindness to the player if they within 2 blocks
              */
@@ -115,15 +120,15 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
 
     }
 
-    public void bringInHookedEntity(Entity caughtEntity)
+    public void bringInHookedEntity(Entity entity)
     {
-            double d0 = posX - caughtEntity.posX;
-            double d1 = posY - caughtEntity.posY;
-            double d2 = posZ - caughtEntity.posZ;
-            caughtEntity.motionX += d0 * 0.5D;
-            caughtEntity.motionY += d1 * 0.5D;
-            caughtEntity.motionZ += d2 * 0.5D;
-            System.out.println("tried to move: " + caughtEntity.getName());
+        int power = -MathHelper.ceil(entity.getDistanceSq(getPosition()));
+        float v = this.getRotationYawHead() * (float) Math.PI / 180.0F;
+        entity.addVelocity(-MathHelper.sin(v) * (float) power, 0.1D + power * 0.04f, MathHelper.cos(v) * (float) power);
+        entity.motionX /= 0.6D;
+        entity.motionZ /= 0.6D;
+        entity.velocityChanged = true;
+        System.out.println("tried to move: " + entity.getName());
     }
 
     @Override

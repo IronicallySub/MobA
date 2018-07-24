@@ -16,6 +16,13 @@ public class RenderMobA extends RenderLiving<EntityMobA> {
         super(rendermanagerIn, new MobA(), 0);
     }
 
+    @Override
+    public void doRender(EntityMobA entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+    }
+
+
+
     /**
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      *
@@ -26,4 +33,13 @@ public class RenderMobA extends RenderLiving<EntityMobA> {
     protected ResourceLocation getEntityTexture(EntityMobA entity) {
         return texture;
     }
+
+
+    /**
+     * Gets the value between start and end according to pct
+     */
+    private double interpolateValue(double start, double end, double pct) {
+        return start + (end - start) * pct;
+    }
+
 }
