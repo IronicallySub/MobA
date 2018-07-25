@@ -15,6 +15,7 @@ import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -24,20 +25,11 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         super(worldIn);
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(9, new EntityAILookIdle(this));
-        this.tasks.addTask(0, new EntityAIAttackMelee(this, 2, false));
-
+        this.tasks.addTask(0, new EntityAIAttackMelee(this, 2, true));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
         this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 100, true, false, input -> !(input instanceof EntityMobA)));
-
-        this.tasks.addTask(0, new EntityAIWander(this, 1.0D, 100));
-
-        this.tasks.addTask(0, new EntityAIAttackRanged(this, 2, 4, 30));
-
-
-        EntityAIMoveTowardsRestriction movingTask = new EntityAIMoveTowardsRestriction(this, 1.0D);
-        this.tasks.addTask(5, movingTask);
-        movingTask.setMutexBits(3);
-
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(5, new EntityAIAttackRanged(this, 2, 4, 30));
     }
 
     @Override
@@ -49,10 +41,6 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
     }
 
-    /**
-     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-     * prevent them from trampling crops
-     */
     @Override
     protected boolean canTriggerWalking() {
         return false;
@@ -69,6 +57,22 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
     }
 
     @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_SQUID_AMBIENT;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return SoundEvents.ENTITY_SQUID_HURT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_SQUID_DEATH;
+    }
+
+
+    @Override
     protected PathNavigate createNavigator(World worldIn) {
         return new PathNavigateSwimmer(this, worldIn);
     }
@@ -78,13 +82,31 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         return true;
     }
 
+    @Override
+    public boolean isPushedByWater() {
+        return false;
+    }
+
         @Override
         public void onUpdate() {
+
+            int airLevel = this.getAir();
+
+            if (this.isEntityAlive() && !this.isInWater()) {
+                --airLevel;
+                this.setAir(airLevel);
+
+                if (this.getAir() == -20) {
+                    this.setAir(0);
+                    this.attackEntityFrom(DamageSource.DROWN, 2.0F);
+                }
+            } else {
+                this.setAir(300);
+            }
+
+
         super.onUpdate();
 
-            if (!inWater && rand.nextInt(5) < 3) {
-                attackEntityFrom(DamageSource.STARVE, 3.0F);
-            }
 
             /*
              * Adding blindness to the player if they within 2 blocks
@@ -92,7 +114,7 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         for(Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(50))) {
             if(entity instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) entity;
-                if (player.getDistanceSqToEntity(this) < 2 && !player.isCreative() && rand.nextBoolean()) {
+                if (player.getDistanceSqToEntity(this) < 1 && !player.isCreative() && rand.nextBoolean()) {
                     player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 600));
                 }
             }

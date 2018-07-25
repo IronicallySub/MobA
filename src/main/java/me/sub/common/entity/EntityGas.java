@@ -2,7 +2,10 @@ package me.sub.common.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -34,6 +37,10 @@ public class EntityGas extends EntityThrowable {
             Entity hit = result.entityHit;
             if (thrower != null) {
                 hit.moveToBlockPosAndAngles(thrower.getPosition(), hit.rotationYaw, hit.rotationPitch);
+                if (hit instanceof EntityPlayer) {
+                    EntityPlayer player = (EntityPlayer) hit;
+                    player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 800, 0));
+                }
             }
         }
     }
