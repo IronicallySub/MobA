@@ -1,0 +1,10 @@
+{
+	"bite": {
+		"category": "hostile",
+		"subtitle": "Bite",
+		"sounds": [{
+			"name": "con_mob_a:bite",
+			"stream": false
+		}]
+	}
+}

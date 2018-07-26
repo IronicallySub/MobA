@@ -1,6 +1,10 @@
 package me.sub.common.entity;
 
+import me.sub.common.AObjects;
+import me.sub.common.EffectFrozen;
+import me.sub.proxy.CommonProxy;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -38,11 +42,31 @@ public class EntityGas extends EntityThrowable {
             Entity hit = result.entityHit;
             if (thrower != null) {
                 hit.moveToBlockPosAndAngles(thrower.getPosition(), hit.rotationYaw, hit.rotationPitch);
-                if (hit instanceof EntityPlayer) {
-                    EntityPlayer player = (EntityPlayer) hit;
-                    player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 800, 0));
+                if (hit instanceof EntityLiving) {
+                    EntityLiving living = (EntityLiving) hit;
+                    living.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 800, 0));
+                    living.addPotionEffect(new PotionEffect(AObjects.FREEZE, 800));
+                    living.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 800));
+                    living.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 800));
+                } else {
+                    hit.setVelocity(0D, 0D, 0D);
+                    hit.velocityChanged = true;
                 }
             }
+        }
+    }
+
+
+    @Override
+    protected float getGravityVelocity() {
+        return 0.000F;
+    }
+
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+        if(this.motionX + this.motionY + this.motionZ == 0 || this.ticksExisted >= 300) {
+            this.setDead();
         }
     }
 }

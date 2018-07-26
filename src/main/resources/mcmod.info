@@ -1,7 +1,7 @@
 [
   {
-    "modid": "mob_a",
-    "name": "MobA",
+    "modid": "con_mob_a",
+    "name": "Con Mob - A",
     "description": "",
     "version": "${version}",
     "mcversion": "${mcversion}",
@@ -10,11 +10,10 @@
     "authorList": [
       ""
     ],
-    "credits": "",
+    "credits": "SubPai",
     "logoFile": "",
     "screenshots": [],
     "dependencies": [
-      ""
     ]
   }
 ]

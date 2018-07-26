@@ -1,5 +1,8 @@
 package me.sub.common.entity;
 
+import jdk.nashorn.api.scripting.AbstractJSObject;
+import me.sub.common.AObjects;
+import me.sub.common.EffectFrozen;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -91,14 +94,26 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         public void onUpdate() {
         super.onUpdate();
 
+
+        if(getAttackTarget() != null) {
+            if(getAttackTarget().getDistance(this) < 7 && rand.nextInt(10) < 5) {
+                faceEntity(getAttackTarget(), 30, 30);
+                EntityGas ball = new EntityGas(world, this);
+                ball.setPosition(posX + this.getLookVec().x, posY + this.getEyeHeight(), posZ + this.getLookVec().z);
+                world.spawnEntity(ball);
+                world.playSound(null, this.getPosition(), SoundEvents.ENTITY_GHAST_SCREAM, SoundCategory.HOSTILE, 1F, 1F);
+            }
+        }
+
+
             /*
              * Adding blindness to the player if they within 2 blocks
              */
-        for(Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(50))) {
+        for(Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(50))) {
             if(entity instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) entity;
                 if (player.getDistance(this) < 1 && !player.isCreative() && rand.nextBoolean()) {
-                    player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 600));
+                    player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100));
                 }
             }
 
@@ -140,6 +155,7 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
+        world.playSound(null, this.getPosition(), AObjects.BITE, SoundCategory.HOSTILE, 1F, 1F);
         entity.attackEntityFrom(ModDamageSources.BITE, 4.0F);
         return super.attackEntityAsMob(entity);
     }
@@ -152,25 +168,12 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
      */
     @Override
     public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
-        faceEntity(target, 30, 30);
-        EntityGas ball = new EntityGas(world, this);
-        ball.setPosition(posX + this.getLookVec().x, posY + this.getEyeHeight(), posZ + this.getLookVec().z);
-        world.spawnEntity(ball);
-        world.playSound(null, this.getPosition(), SoundEvents.ENTITY_GHAST_SCREAM, SoundCategory.HOSTILE, 1F, 1F);
-    }
 
-    @Override
-    protected void createRunningParticles() {
-
-    }
-
-    @Override
-    public void spawnRunningParticles() {
-
-    }
+         }
 
     @Override
     public void setSwingingArms(boolean swingingArms) {
 
     }
+
 }
