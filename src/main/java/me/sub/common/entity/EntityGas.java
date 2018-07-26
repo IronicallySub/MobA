@@ -24,6 +24,7 @@ public class EntityGas extends EntityThrowable {
     public EntityGas(World worldIn, EntityLivingBase throwerIn) {
         super(worldIn, throwerIn);
         thrower = throwerIn;
+        this.shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, 0, 2F, 0);
     }
 
     /**

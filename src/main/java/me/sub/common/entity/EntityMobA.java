@@ -36,7 +36,7 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6.0D);
-        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
+        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.9D);
         getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
         getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
     }
@@ -89,24 +89,7 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
 
         @Override
         public void onUpdate() {
-
-            int airLevel = this.getAir();
-
-            if (this.isEntityAlive() && !this.isInWater()) {
-                --airLevel;
-                this.setAir(airLevel);
-
-                if (this.getAir() == -20) {
-                    this.setAir(0);
-                    this.attackEntityFrom(DamageSource.DROWN, 2.0F);
-                }
-            } else {
-                this.setAir(300);
-            }
-
-
         super.onUpdate();
-
 
             /*
              * Adding blindness to the player if they within 2 blocks
@@ -114,11 +97,29 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         for(Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(50))) {
             if(entity instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) entity;
-                if (player.getDistanceSqToEntity(this) < 1 && !player.isCreative() && rand.nextBoolean()) {
+                if (player.getDistance(this) < 1 && !player.isCreative() && rand.nextBoolean()) {
                     player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 600));
                 }
             }
 
+        }
+    }
+
+    @Override
+    public void onEntityUpdate() {
+        int i = this.getAir();
+        super.onEntityUpdate();
+
+        if (this.isEntityAlive() && !this.isInWater()) {
+            --i;
+            this.setAir(i);
+
+            if (this.getAir() == -20) {
+                this.setAir(0);
+                this.attackEntityFrom(DamageSource.DROWN, 2.0F);
+            }
+        } else {
+            this.setAir(300);
         }
     }
 
