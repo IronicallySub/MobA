@@ -1,2 +1,4 @@
 entity.mob_a.name=Creature of the ocean depths
 entity.moba_gas.name=Gas
+mob.freeze.name=Frozen!
+item.a_tongue.name=Creature's tongue

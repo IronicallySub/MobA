@@ -1,47 +1,51 @@
 package me.sub.common.entity;
 
-import jdk.nashorn.api.scripting.AbstractJSObject;
 import me.sub.common.AObjects;
-import me.sub.common.EffectFrozen;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EntityMobA extends EntityMob implements IRangedAttackMob {
+public class EntityMobA extends EntityMob {
+
+    private static final DataParameter<Boolean> MOVING = EntityDataManager.createKey(EntityMobA.class, DataSerializers.BOOLEAN);
+
 
     public EntityMobA(World worldIn) {
         super(worldIn);
+        this.setSize(0.85F, 0.85F);
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(9, new EntityAILookIdle(this));
         this.tasks.addTask(0, new EntityAIAttackMelee(this, 2, true));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
         this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 100, true, false, input -> !(input instanceof EntityMobA)));
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(5, new EntityAIAttackRanged(this, 2, 4, 30));
+        EntityAIWander wander = new EntityAIWander(this, 2, 80);
+        this.tasks.addTask(0, wander);
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6.0D);
-        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.9D);
-        getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1D);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
     }
 
     @Override
@@ -52,11 +56,6 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
     @Override
     public float getEyeHeight() {
         return this.height * 0.5F;
-    }
-
-    @Override
-    public float getBlockPathWeight(BlockPos pos) {
-        return this.world.getBlockState(pos).getMaterial() == Material.WATER ? 10.0F + this.world.getLightBrightness(pos) - 0.5F : super.getBlockPathWeight(pos);
     }
 
     @Override
@@ -74,10 +73,23 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         return SoundEvents.ENTITY_SQUID_DEATH;
     }
 
+    @Override
+    public void onKillEntity(EntityLivingBase entityLivingIn) {
+        super.onKillEntity(entityLivingIn);
+        world.playSound(null, this.getPosition(), AObjects.BITE, SoundCategory.HOSTILE, 1F, 1F);
+    }
 
     @Override
     protected PathNavigate createNavigator(World worldIn) {
         return new PathNavigateSwimmer(this, worldIn);
+    }
+
+    @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        if (!world.isRemote) {
+            dropItem(AObjects.TONGUE, 1);
+        }
     }
 
     @Override
@@ -94,9 +106,19 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         public void onUpdate() {
         super.onUpdate();
 
+            if (getAttackTarget() == null && world.getClosestPlayerToEntity(this, 8) != null) {
+                EntityPlayer player = world.getClosestPlayerToEntity(this, 8);
+                if (!player.isCreative()) {
+                    setAttackTarget(player);
+                } else {
+                    if (world.getBlockState(getPosition().up()).getBlock() == Blocks.AIR) {
+                        this.motionY = -4;
+                    }
+                }
+            }
 
         if(getAttackTarget() != null) {
-            if(getAttackTarget().getDistance(this) < 7 && rand.nextInt(10) < 5) {
+            if (getAttackTarget().getDistance(this) < 10 && rand.nextInt(250) < 100 && rand.nextBoolean()) {
                 faceEntity(getAttackTarget(), 30, 30);
                 EntityGas ball = new EntityGas(world, this);
                 ball.setPosition(posX + this.getLookVec().x, posY + this.getEyeHeight(), posZ + this.getLookVec().z);
@@ -120,6 +142,13 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         }
     }
 
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        this.dataManager.register(MOVING, false);
+    }    
+    
+    
     @Override
     public void onEntityUpdate() {
         int i = this.getAir();
@@ -160,20 +189,5 @@ public class EntityMobA extends EntityMob implements IRangedAttackMob {
         return super.attackEntityAsMob(entity);
     }
 
-    /**
-     * Attack the specified entity using a ranged attack.
-     *
-     * @param target
-     * @param distanceFactor
-     */
-    @Override
-    public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
-
-         }
-
-    @Override
-    public void setSwingingArms(boolean swingingArms) {
-
-    }
 
 }

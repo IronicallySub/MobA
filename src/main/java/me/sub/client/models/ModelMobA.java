@@ -68,8 +68,6 @@ public class ModelMobA extends ModelBase
         this.mouth_lb.rotateAngleX = Math.max(0.0F, (float)Math.abs(Math.sin(time * -0.1D)) * 0.3926991F);
         this.mouth_rb.rotateAngleY = Math.max(0.0F, (float)Math.abs(Math.sin(time * 0.1D)) * 0.7853982F);
         this.mouth_rb.rotateAngleX = Math.max(0.0F, (float)Math.abs(Math.sin(time * 0.1D)) * 0.3926991F);
-
-        tongue.isHidden = false;
         this.tongue.offsetZ = Math.max(0.0F, (float) Math.sin(time * 0.4D) * 0.3926991F);
         this.head.render(scale);
     }

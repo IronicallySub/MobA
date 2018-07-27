@@ -1,9 +1,6 @@
-package me.sub.common;
+package me.sub.common.potions;
 
-import javafx.scene.effect.Effect;
-import me.sub.MobA;
-import me.sub.proxy.CommonProxy;
-import net.minecraft.entity.Entity;
+import me.sub.Con17MobA;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 
@@ -11,8 +8,8 @@ public class EffectFrozen extends Potion {
 
     public EffectFrozen() {
         super(true, 8);
-        setRegistryName(MobA.MOD_ID, "freeze");
-        setPotionName("freeze");
+        setRegistryName(Con17MobA.MOD_ID, "freeze");
+        setPotionName("mob.freeze.name");
     }
 
     @Override
@@ -25,4 +22,8 @@ public class EffectFrozen extends Potion {
         entity.motionZ=0;
     }
 
+    @Override
+    public int getStatusIconIndex() {
+        return super.getStatusIconIndex();
+    }
 }

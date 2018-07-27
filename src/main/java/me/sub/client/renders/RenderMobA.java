@@ -1,5 +1,6 @@
 package me.sub.client.renders;
 
+import me.sub.Con17MobA;
 import me.sub.client.models.ModelMobA;
 import me.sub.common.entity.EntityMobA;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -10,7 +11,7 @@ import javax.annotation.Nullable;
 
 public class RenderMobA extends RenderLiving<EntityMobA> {
 
-    private ResourceLocation texture = new ResourceLocation(me.sub.MobA.MOD_ID,"textures/entity/mob_a.png");
+    private ResourceLocation texture = new ResourceLocation(Con17MobA.MOD_ID, "textures/entity/mob_a.png");
 
     public RenderMobA(RenderManager rendermanagerIn) {
         super(rendermanagerIn, new ModelMobA(), 0);

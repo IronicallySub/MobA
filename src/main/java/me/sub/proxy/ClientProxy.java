@@ -3,7 +3,6 @@ package me.sub.proxy;
 import me.sub.client.renders.RenderGas;
 import me.sub.client.renders.RenderMobA;
 import me.sub.common.AObjects;
-import me.sub.common.EffectFrozen;
 import me.sub.common.entity.EntityGas;
 import me.sub.common.entity.EntityMobA;
 import net.minecraft.client.Minecraft;

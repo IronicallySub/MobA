@@ -1,15 +1,13 @@
 package me.sub.common.entity;
 
 import me.sub.common.AObjects;
-import me.sub.common.EffectFrozen;
-import me.sub.proxy.CommonProxy;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -48,6 +46,7 @@ public class EntityGas extends EntityThrowable {
                     living.addPotionEffect(new PotionEffect(AObjects.FREEZE, 800));
                     living.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 800));
                     living.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 800));
+                    living.attackEntityFrom(DamageSource.MAGIC, 1);
                 } else {
                     hit.setVelocity(0D, 0D, 0D);
                     hit.velocityChanged = true;
