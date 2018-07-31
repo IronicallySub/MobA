@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X",
+    "X",
+    "B"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "con_mob_a:a_tongue"
+    }
+  },
+  "result": {
+    "item": "con_mob_a:t_sword"
+  }
+}

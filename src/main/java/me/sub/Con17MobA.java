@@ -6,6 +6,9 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = Con17MobA.MOD_ID, name = Con17MobA.MOD_NAME, version = Con17MobA.VERSION)
 public class Con17MobA {
@@ -28,7 +31,7 @@ public class Con17MobA {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.init();
-    }
+      }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
