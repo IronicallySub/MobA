@@ -1,10 +1,12 @@
 package me.sub.common.entity;
 
 import me.sub.common.AObjects;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -22,7 +24,8 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
 
     private static final DataParameter<Boolean> IS_HIDING = EntityDataManager.createKey(EntityMobD.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> HIDDEN_TIME = EntityDataManager.createKey(EntityMobD.class, DataSerializers.VARINT);
-
+    private static final DataParameter<Boolean> SPECIAL_ATTACK = EntityDataManager.createKey(EntityMobD.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> SPECIAL_TIME = EntityDataManager.createKey(EntityMobD.class, DataSerializers.VARINT);
 
     public EntityMobD(World worldIn) {
         super(worldIn);
@@ -40,6 +43,7 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
         this.tasks.addTask(1, new EntityAIHurtByTarget(this, true));
+        this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(0, new EntityAIAttackRanged(this, 1, 20, 23));
         this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 100, true, false, input -> !(input instanceof EntityMobD)));
     }
@@ -69,6 +73,8 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
         super.entityInit();
         this.getDataManager().register(IS_HIDING, false);
         this.getDataManager().register(HIDDEN_TIME, 0);
+        this.getDataManager().register(SPECIAL_ATTACK, false);
+        this.getDataManager().register(SPECIAL_TIME, 0);
     }
 
     protected SoundEvent getAmbientSound() {
@@ -88,6 +94,7 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setBoolean("hiding", isHiding());
         compound.setInteger("hiddenTime", getHiddenTime());
+        compound.setBoolean("attacking", isAttackActive());
         return super.writeToNBT(compound);
     }
 
@@ -95,12 +102,46 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
     public void readEntityFromNBT(NBTTagCompound compound) {
         setHiding(compound.getBoolean("hiding"));
         setHiddenTime(compound.getInteger("hiddenTime"));
+        setAttackActive(compound.getBoolean("attacking"));
         super.readEntityFromNBT(compound);
+    }
+
+    @Override
+    public void travel(float strafe, float vertical, float forward) {
+        if (!isHiding()) {
+            super.travel(strafe, vertical, forward);
+        }
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
+
+        if (hurtTime < maxHurtTime && isHiding() && rand.nextBoolean()) {
+            setAttackActive(true);
+        }
+
+        if (isAttackActive()) {
+            setSpecialTime(getSpecialTime() + 1);
+            int time = getSpecialTime();
+            if (time < 100) {
+                this.world.spawnParticle(EnumParticleTypes.FLAME, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0D, 0D, 0D);
+            }
+
+            if (time >= 100) {
+                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(20))) {
+                    entity.setFire(10);
+                    this.world.spawnParticle(EnumParticleTypes.FLAME, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0D, 0D, 0D);
+                    entity.world.spawnParticle(EnumParticleTypes.FLAME, entity.posX + (this.rand.nextDouble() - 0.5D) * (double) entity.width, entity.posY + this.rand.nextDouble() * (double) entity.height, entity.posZ + (this.rand.nextDouble() - 0.5D) * (double) entity.width, 0D, 0D, 0D);
+                }
+                setSpecialTime(0);
+                setAttackActive(false);
+            }
+        }
+
+        if (isWet()) {
+            attackEntityFrom(DamageSource.DROWN, 1.0F);
+        }
 
         if (isHiding()) {
             setHiddenTime(getHiddenTime() + 1);
@@ -125,11 +166,20 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
             }
 
             for (int i = 0; i < 2; ++i) {
-                if (!isHiding()) {
-                    this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0.0D, 0.0D, 0.0D);
-                } else {
-                    this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0.0D, 0.0D, 0.0D);
+
+
+                if (!isAttackActive()) {
+                    if (!isHiding()) {
+                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0.0D, 0.0D, 0.0D);
+                    } else {
+                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0.0D, 0.0D, 0.0D);
+                    }
                 }
+
+                if (getHealth() < 5) {
+                    this.world.spawnParticle(EnumParticleTypes.DAMAGE_INDICATOR, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 1D, 1D, 1D);
+                }
+
             }
         }
 
@@ -141,6 +191,14 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
         super.dropFewItems(wasRecentlyHit, lootingModifier);
         dropItem(AObjects.PLATE, 1);
         dropItem(AObjects.CHARGE, rand.nextInt(5));
+
+        if (rand.nextBoolean()) {
+            for (int i = 0; i < 4; i++) {
+                EntityBlaze blaze = new EntityBlaze(world);
+                blaze.setLocationAndAngles(getPosition().getX() + world.rand.nextInt(4), getPosition().getY(), getPosition().getZ() + world.rand.nextInt(4), 0, 0);
+                world.spawnEntity(blaze);
+            }
+        }
     }
 
     public boolean isHiding() {
@@ -159,12 +217,23 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
         getDataManager().set(HIDDEN_TIME, hideTime);
     }
 
-    /**
-     * Attack the specified entity using a ranged attack.
-     *
-     * @param target
-     * @param distanceFactor
-     */
+    public boolean isAttackActive() {
+        return getDataManager().get(SPECIAL_ATTACK);
+    }
+
+    public void setAttackActive(boolean hiding) {
+        getDataManager().set(SPECIAL_ATTACK, hiding);
+    }
+
+    public int getSpecialTime() {
+        return getDataManager().get(SPECIAL_TIME);
+    }
+
+    public void setSpecialTime(int time) {
+        getDataManager().set(SPECIAL_TIME, time);
+    }
+
+
     @Override
     public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
         if (isHiding() || getAttackTarget() == null || target.isDead) return;

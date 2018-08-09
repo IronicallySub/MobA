@@ -106,7 +106,7 @@ public class AObjects {
             } else {
                 if (e.getSource().getTrueSource() != null) {
                     e.getSource().getTrueSource().attackEntityFrom(AObjects.TOO_HOT, 2);
-                    e.getSource().getTrueSource().setFire(3);
+                    e.getSource().getTrueSource().setFire(1);
                 }
                 e.setCanceled(true);
             }
