@@ -130,7 +130,6 @@ public class ModelMobD extends ModelBase {
             this.head.rotationPointY = 0.0F;
         }
 
-        copyModelAngles(this.head, this.crown);
     }
 
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {

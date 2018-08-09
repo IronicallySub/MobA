@@ -58,6 +58,12 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
         return isHiding();
     }
 
+
+    @Override
+    public boolean canBreatheUnderwater() {
+        return false;
+    }
+
     @Override
     protected void entityInit() {
         super.entityInit();
@@ -134,6 +140,7 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
         super.dropFewItems(wasRecentlyHit, lootingModifier);
         dropItem(AObjects.PLATE, 1);
+        dropItem(AObjects.CHARGE, rand.nextInt(5));
     }
 
     public boolean isHiding() {
@@ -160,8 +167,7 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
      */
     @Override
     public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
-        if (isHiding() || getAttackTarget() == null) return;
-        System.out.println("targeting: " + target.getName());
+        if (isHiding() || getAttackTarget() == null || target.isDead) return;
         faceEntity(getAttackTarget(), 30, 30);
         EntityRock ball = new EntityRock(world, this);
         ball.setPosition(posX + this.getLookVec().x, posY + this.getEyeHeight(), posZ + this.getLookVec().z);
