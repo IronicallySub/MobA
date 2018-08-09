@@ -189,7 +189,13 @@ public class EntityMobA extends EntityMob {
             }
 
         if(getAttackTarget() != null) {
-            if (getAttackTarget().getDistance(this) < 10 && rand.nextBoolean() && rand.nextInt(10) < 3 && ticksExisted % 100 != 0) {
+
+            if (getAttackTarget() instanceof EntityPlayer) {
+                EntityPlayer player = (EntityPlayer) getAttackTarget();
+                if (player.isCreative()) return;
+            }
+
+            if (getAttackTarget().getDistance(this) < 10 && rand.nextBoolean() && rand.nextInt(10) < 3 && ticksExisted % 300 != 0) {
                 faceEntity(getAttackTarget(), 30, 30);
                 EntityGas ball = new EntityGas(world, this);
                 ball.setPosition(posX + this.getLookVec().x, posY + this.getEyeHeight(), posZ + this.getLookVec().z);
@@ -215,7 +221,7 @@ public class EntityMobA extends EntityMob {
                 EntityPlayer player = (EntityPlayer) getAttackTarget();
                 if (player.getDistanceSq(this) < 5) {
 
-                    if (rand.nextBoolean() && isInSight(this, player)) {
+                    if (rand.nextBoolean() && isInSight(this, player) && ticksExisted % 200 == 0 && canEntityBeSeen(getAttackTarget())) {
                         player.addPotionEffect(new PotionEffect(AObjects.FREEZE, 200));
                     }
 

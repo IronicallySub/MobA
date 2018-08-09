@@ -39,7 +39,6 @@ public class EntityGas extends EntityThrowable {
         if (result.entityHit != null) {
             Entity hit = result.entityHit;
             if (thrower != null) {
-                hit.moveToBlockPosAndAngles(thrower.getPosition(), hit.rotationYaw, hit.rotationPitch);
                 if (hit instanceof EntityLiving) {
                     EntityLiving living = (EntityLiving) hit;
                     living.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 800, 0));
@@ -47,9 +46,6 @@ public class EntityGas extends EntityThrowable {
                     living.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 800));
                     living.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 800));
                     living.attackEntityFrom(DamageSource.MAGIC, 1);
-                } else {
-                    hit.setVelocity(0D, 0D, 0D);
-                    hit.velocityChanged = true;
                 }
             }
         }

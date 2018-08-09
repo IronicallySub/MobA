@@ -1,22 +1,21 @@
 package me.sub.client.renders;
 
 import me.sub.Con17MobA;
-import me.sub.client.models.ModelMobA;
-import me.sub.common.entity.EntityMobA;
+import me.sub.client.models.ModelMobD;
+import me.sub.common.entity.EntityMobD;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public class RenderMobA extends RenderLiving<EntityMobA> {
+public class RenderMobD extends RenderLiving<EntityMobD> {
 
-    private ResourceLocation texture = new ResourceLocation(Con17MobA.MOD_ID, "textures/entity/mob_a.png");
+    private ResourceLocation texture = new ResourceLocation(Con17MobA.MOD_ID, "textures/entity/mob_d.png");
 
-    public RenderMobA(RenderManager rendermanagerIn) {
-        super(rendermanagerIn, new ModelMobA(), 0);
+    public RenderMobD(RenderManager rendermanagerIn) {
+        super(rendermanagerIn, new ModelMobD(), 0);
     }
-
 
     /**
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
@@ -25,9 +24,7 @@ public class RenderMobA extends RenderLiving<EntityMobA> {
      */
     @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(EntityMobA entity) {
+    protected ResourceLocation getEntityTexture(EntityMobD entity) {
         return texture;
     }
-
-
 }
