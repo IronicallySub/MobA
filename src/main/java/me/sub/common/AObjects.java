@@ -30,9 +30,12 @@ public class AObjects {
 
     public static final EffectFrozen FREEZE = new EffectFrozen();
 
-    public static final EntityEntry MOBA = EntityEntryBuilder.create().entity(EntityMobA.class).egg(0, 7).id(new ResourceLocation(Con17MobA.MOD_ID, "mob_a"), 0).name("mob_a").tracker(80, 3, false).build();
+    public static final EntityEntry MOBA = EntityEntryBuilder.create().entity(EntityMobA.class).egg(2, 7).id(new ResourceLocation(Con17MobA.MOD_ID, "mob_a"), 0).name("mob_a").tracker(80, 3, false).build();
     public static final EntityEntry MOBA_GAS = EntityEntryBuilder.create().entity(EntityGas.class).id(new ResourceLocation(Con17MobA.MOD_ID, "moba_gas"), 1).name("moba_gas").tracker(80, 3, true).build();
-    public static final EntityEntry MOBD = EntityEntryBuilder.create().entity(EntityMobD.class).egg(0, 78).id(new ResourceLocation(Con17MobA.MOD_ID, "mob_d"), 2).name("mob_d").tracker(80, 3, false).build();
+    public static final EntityEntry MOBD = EntityEntryBuilder.create().entity(EntityMobD.class).egg(7, 78).id(new ResourceLocation(Con17MobA.MOD_ID, "mob_d"), 2).name("mob_d").tracker(80, 3, false).build();
+    public static final EntityEntry MOBA_FIRE = EntityEntryBuilder.create().entity(EntityFireCharge.class).id(new ResourceLocation(Con17MobA.MOD_ID, "moba_gas"), 1).name("moba_gas").tracker(80, 3, true).build();
+
+
     public static ModDamageSources BITE_SOURCE = new ModDamageSources(" was bitten to death....");
 
     public static Item.ToolMaterial TONGUE_M = EnumHelper.addToolMaterial("TONGUE", 3, 1561, 8.0F, 5.0F, 100);

@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumParticleTypes;
 
 public class RenderRock extends RenderSnowball<EntityRock> {
 
@@ -23,6 +24,11 @@ public class RenderRock extends RenderSnowball<EntityRock> {
         GlStateManager.enableRescaleNormal();
         GlStateManager.disableFog();
         GlStateManager.disableLighting();
+
+        for (int i = 0; i < 7; ++i) {
+            entity.world.spawnParticle(EnumParticleTypes.FLAME, entity.posX + (entity.world.rand.nextDouble() - 0.5D) * (double) entity.width, entity.posY + entity.world.rand.nextDouble() * (double) entity.height, entity.posZ + (entity.world.rand.nextDouble() - 0.5D) * (double) entity.width, 0D, 0.0D, 0D);
+        }
+
         Minecraft.getMinecraft().getRenderItem().renderItem(this.getStackToRender(entity), ItemCameraTransforms.TransformType.GROUND);
         GlStateManager.enableFog();
         GlStateManager.enableLighting();
