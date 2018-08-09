@@ -32,7 +32,6 @@ public class EntityRock extends EntityThrowable {
      */
     @Override
     protected void onImpact(RayTraceResult result) {
-        System.out.println(result.entityHit);
         if (result.entityHit != null) {
             Entity hit = result.entityHit;
             if (thrower != null) {

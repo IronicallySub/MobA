@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:shield"
+    },
+    {
+      "item": "con_mob_a:plate_part"
+    }
+  ],
+  "result": {
+    "item": "con_mob_a:a_shield_plate"
+  }
+}
