@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "con_mob_a:items/plate_part"
+  }
+}

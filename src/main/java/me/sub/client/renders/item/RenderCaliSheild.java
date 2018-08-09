@@ -16,12 +16,10 @@ public class RenderCaliSheild extends TileEntityItemStackRenderer {
 
     @Override
     public void renderByItem(ItemStack itemStackIn) {
-        {
             GlStateManager.pushMatrix();
             GlStateManager.scale(1.0F, -1.0F, -1.0F);
             Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
             this.modelShield.render();
             GlStateManager.popMatrix();
-        }
     }
 }

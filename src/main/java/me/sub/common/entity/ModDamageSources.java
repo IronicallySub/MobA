@@ -7,10 +7,6 @@ import net.minecraft.util.text.TextComponentString;
 
 public class ModDamageSources extends DamageSource {
 
-    public static ModDamageSources BITE = new ModDamageSources(" was bitten to death....");
-    public static ModDamageSources TOO_HOT = new ModDamageSources(" held a hot item too long...");
-
-
     public ModDamageSources(String damageTypeIn) {
         super(damageTypeIn);
     }

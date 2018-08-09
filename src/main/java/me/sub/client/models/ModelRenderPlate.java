@@ -23,7 +23,7 @@ public class ModelRenderPlate extends ModelRenderer {
     @Override
     public void render(float scale) {
         GlStateManager.pushMatrix();
-        if (isHiding) {
+        if (isHiding()) {
             GlStateManager.translate(0, 0.6, 0);
         }
         super.render(scale);

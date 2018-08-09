@@ -3,10 +3,12 @@ package me.sub.proxy;
 import me.sub.client.renders.RenderGas;
 import me.sub.client.renders.RenderMobA;
 import me.sub.client.renders.RenderMobD;
+import me.sub.client.renders.item.RenderRock;
 import me.sub.common.AObjects;
 import me.sub.common.entity.EntityGas;
 import me.sub.common.entity.EntityMobA;
 import me.sub.common.entity.EntityMobD;
+import me.sub.common.entity.EntityRock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MovementInput;
 import net.minecraftforge.client.event.InputUpdateEvent;
@@ -23,6 +25,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityMobA.class, RenderMobA::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityGas.class, RenderGas::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityMobD.class, RenderMobD::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityRock.class, new RenderRock(Minecraft.getMinecraft().getRenderManager()));
     }
 
     @Override

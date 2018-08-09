@@ -184,7 +184,7 @@ public class EntityMobA extends EntityMob {
             if (getAttackTarget() != null) {
                 Entity target = getAttackTarget();
                 if (target.getDistance(this) < 2) {
-                    target.attackEntityFrom(ModDamageSources.BITE, 1F);
+                    target.attackEntityFrom(AObjects.BITE_SOURCE, 1F);
                 }
             }
 
@@ -290,13 +290,13 @@ public class EntityMobA extends EntityMob {
 
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
-        return super.attackEntityFrom(ModDamageSources.BITE, 4);
+        return super.attackEntityFrom(AObjects.BITE_SOURCE, 4);
     }
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
         world.playSound(null, this.getPosition(), AObjects.BITE, SoundCategory.HOSTILE, 1F, 1F);
-        entity.attackEntityFrom(ModDamageSources.BITE, 4.0F);
+        entity.attackEntityFrom(AObjects.BITE_SOURCE, 4.0F);
         return super.attackEntityAsMob(entity);
     }
 
