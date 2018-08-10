@@ -25,7 +25,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityMobA.class, RenderMobA::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityGas.class, RenderGas::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityMobD.class, RenderMobD::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityRock.class, new RenderRock(Minecraft.getMinecraft().getRenderManager()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityRock.class, RenderRock::new);
     }
 
     @Override

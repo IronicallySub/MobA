@@ -98,7 +98,7 @@ public class AObjects {
             if (!mobD.isHiding()) {
                 if (e.getSource().getTrueSource() instanceof EntityPlayer) {
                     EntityPlayer player = (EntityPlayer) e.getSource().getTrueSource();
-                    if (player.world.rand.nextInt(20) < 12) {
+                    if (player.world.rand.nextInt(20) < 12 && !player.getHeldItemMainhand().isEmpty()) {
                         player.sendStatusMessage(new TextComponentString(TextFormatting.RED + TextFormatting.BOLD.toString() + "You item is getting too hot!"), true);
                         player.getCooldownTracker().setCooldown(player.getHeldItemMainhand().getItem(), 100);
                     }

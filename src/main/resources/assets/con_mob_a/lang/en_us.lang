@@ -3,3 +3,8 @@ entity.moba_gas.name=Gas
 mob.freeze.name=Frozen!
 item.a_tongue.name=Creature's tongue
 item.t_sword.name=Depth Sword
+
+
+item.plate_part.name=Plate part
+entity.mob_d.name=Hovering Inferno
+item.charge.name=Fire charge! 

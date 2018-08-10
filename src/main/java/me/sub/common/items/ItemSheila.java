@@ -25,7 +25,7 @@ public class ItemSheila extends ItemShield {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        return "Shield!";
+        return "Plated Shield!";
     }
 
     @Override

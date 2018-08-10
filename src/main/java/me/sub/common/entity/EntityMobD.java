@@ -30,7 +30,7 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
     public EntityMobD(World worldIn) {
         super(worldIn);
         isImmuneToFire = true;
-
+      
         //Paths
         setPathPriority(PathNodeType.WATER, -1.0F);
         setPathPriority(PathNodeType.LAVA, 8.0F);
@@ -43,9 +43,18 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
         this.tasks.addTask(1, new EntityAIHurtByTarget(this, true));
-        this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(0, new EntityAIWander(this, 1.0D, 100));
         this.tasks.addTask(0, new EntityAIAttackRanged(this, 1, 20, 23));
         this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 100, true, false, input -> !(input instanceof EntityMobD)));
+    }
+    
+    /**
+     * Called by the /kill command.
+     */
+    @Override
+    public void onKillCommand()
+    {
+        this.setDead();
     }
 
     @Override
@@ -59,7 +68,7 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
 
     @Override
     public boolean getIsInvulnerable() {
-        return isHiding();
+        return false;
     }
 
 
@@ -128,7 +137,8 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
                 this.world.spawnParticle(EnumParticleTypes.FLAME, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0D, 0D, 0D);
             }
 
-            if (time >= 100) {
+            if (time == 100) {
+            	playSound(SoundEvents.ENTITY_ENDERMEN_SCREAM, 1, 1);
                 for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(20))) {
                     entity.setFire(10);
                     this.world.spawnParticle(EnumParticleTypes.FLAME, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0D, 0D, 0D);

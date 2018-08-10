@@ -69,7 +69,8 @@ public class ModelMobD extends ModelBase {
 
             if (entityMobD.isHiding()) {
                 offsetValue = -0.07F;
-                body_hidden.rotateAngleY = entityIn.world.getWorldTime() / 2;
+                System.out.println("sdfsdfsdfd");
+                body_hidden.rotateAngleY = entityIn.world.getTotalWorldTime();
             } else {
                 offsetValue = -0.09F;
             }
@@ -109,6 +110,7 @@ public class ModelMobD extends ModelBase {
             GlStateManager.popMatrix();
 
             this.body.render(scale);
+            
             this.body_hidden.render(scale);
         }
     }
