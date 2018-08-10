@@ -1,7 +1,7 @@
 package me.sub.common.items;
 
 import me.sub.Con17MobA;
-import me.sub.common.entity.EntityFireCharge;
+import me.sub.common.entity.EntityRock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,9 +36,9 @@ public class ItemSheila extends ItemShield {
             if (entityIn instanceof EntityLivingBase) {
                 EntityLivingBase livingBase = (EntityLivingBase) entityIn;
 
-                if (timer > 100 && livingBase.isHandActive()) {
+                if (timer == 100 && livingBase.isHandActive()) {
                     if (!worldIn.isRemote) {
-                        EntityFireCharge ball = new EntityFireCharge(worldIn, livingBase);
+                        EntityRock ball = new EntityRock(worldIn, livingBase);
                         ball.shoot(livingBase, livingBase.rotationPitch, livingBase.rotationYaw, 0.0F, 1.5F, 1.0F);
                         worldIn.spawnEntity(ball);
                     }

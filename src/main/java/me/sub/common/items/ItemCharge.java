@@ -1,7 +1,7 @@
 package me.sub.common.items;
 
 import me.sub.Con17MobA;
-import me.sub.common.entity.EntityFireCharge;
+import me.sub.common.entity.EntityRock;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -32,7 +32,7 @@ public class ItemCharge extends Item {
         }
 
         if (!worldIn.isRemote) {
-            EntityFireCharge ball = new EntityFireCharge(worldIn, playerIn);
+            EntityRock ball = new EntityRock(worldIn, playerIn);
             ball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
             worldIn.spawnEntity(ball);
         }

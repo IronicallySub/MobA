@@ -37,8 +37,7 @@ public class AObjects {
     public static final EntityEntry MOBA = EntityEntryBuilder.create().entity(EntityMobA.class).egg(2, 7).id(new ResourceLocation(Con17MobA.MOD_ID, "mob_a"), 0).name("mob_a").tracker(80, 3, false).build();
     public static final EntityEntry MOBA_GAS = EntityEntryBuilder.create().entity(EntityGas.class).id(new ResourceLocation(Con17MobA.MOD_ID, "moba_gas"), 1).name("moba_gas").tracker(80, 3, true).build();
     public static final EntityEntry MOBD = EntityEntryBuilder.create().entity(EntityMobD.class).egg(7, 78).id(new ResourceLocation(Con17MobA.MOD_ID, "mob_d"), 2).name("mob_d").tracker(80, 3, false).build();
-    public static final EntityEntry FIRE = EntityEntryBuilder.create().entity(EntityFireCharge.class).id(new ResourceLocation(Con17MobA.MOD_ID, "fire"), 5).name("fire").tracker(80, 3, true).build();
-
+  
 
     public static ModDamageSources BITE_SOURCE = new ModDamageSources(" was bitten to death....");
 
@@ -61,7 +60,7 @@ public class AObjects {
     @SubscribeEvent
     public static void addEntities(RegistryEvent.Register<EntityEntry> e) {
         IForgeRegistry<EntityEntry> reg = e.getRegistry();
-        reg.registerAll(MOBA, MOBA_GAS, MOBD, MOBD_BALL, FIRE);
+        reg.registerAll(MOBA, MOBA_GAS, MOBD, MOBD_BALL);
     }
 
     @SubscribeEvent
