@@ -35,7 +35,7 @@ public class EntityRock extends EntityThrowable {
         if (result.entityHit != null) {
             Entity hit = result.entityHit;
             if (thrower != null) {
-                hit.attackEntityFrom(AObjects.ROCK, 2F);
+                hit.attackEntityFrom(AObjects.ROCK, 4F);
                 setDead();
             }
         }

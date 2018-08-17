@@ -48,7 +48,7 @@ public class RenderMobD extends RenderLiving<EntityMobD> {
                 GlStateManager.rotate((mc.player.ticksExisted + LCRenderHelper.renderTick) / 2F, 0, 1, 0);
 
                 Vec3d color = new Vec3d(0.39F, 0.36F, 0);;
-                for (int i = 0; i < 30; i++) {
+                for (int i = 0; i < 5; i++) {
                     GlStateManager.rotate((mc.player.ticksExisted + LCRenderHelper.renderTick) * i / 70F, 1, 1, 0);
                     LCRenderHelper.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, color, 0);
                 }
