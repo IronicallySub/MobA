@@ -31,12 +31,6 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
         super(worldIn);
         isImmuneToFire = true;
       
-        //Paths
-        setPathPriority(PathNodeType.WATER, -1.0F);
-        setPathPriority(PathNodeType.LAVA, 8.0F);
-        setPathPriority(PathNodeType.DANGER_FIRE, 0.0F);
-        setPathPriority(PathNodeType.DAMAGE_FIRE, 0.0F);
-
         //Tasks
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1.0D, 0.0F));
@@ -63,7 +57,7 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6.0D);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1D);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100.0D);
     }
 
     @Override
@@ -126,8 +120,10 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
     public void onUpdate() {
         super.onUpdate();
 
-        if (hurtTime < maxHurtTime && isHiding() && rand.nextBoolean()) {
-            setAttackActive(true);
+        if (ticksExisted % 400 == 0 && world.getClosestPlayerToEntity(this, 6) != null) {
+           EntityPlayer player = world.getClosestPlayerToEntity(this, 6); 
+        	if(player.isCreative()) return;
+        	setAttackActive(true);
         }
 
         if (isAttackActive()) {
@@ -139,7 +135,7 @@ public class EntityMobD extends EntityMob implements IRangedAttackMob {
 
             if (time == 100) {
             	playSound(SoundEvents.ENTITY_ENDERMEN_SCREAM, 1, 1);
-                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(20))) {
+                for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(6))) {
                     entity.setFire(10);
                     this.world.spawnParticle(EnumParticleTypes.FLAME, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0D, 0D, 0D);
                     entity.world.spawnParticle(EnumParticleTypes.FLAME, entity.posX + (this.rand.nextDouble() - 0.5D) * (double) entity.width, entity.posY + this.rand.nextDouble() * (double) entity.height, entity.posZ + (this.rand.nextDouble() - 0.5D) * (double) entity.width, 0D, 0D, 0D);

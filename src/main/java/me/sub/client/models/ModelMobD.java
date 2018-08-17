@@ -69,7 +69,6 @@ public class ModelMobD extends ModelBase {
 
             if (entityMobD.isHiding()) {
                 offsetValue = -0.07F;
-                System.out.println("sdfsdfsdfd");
                 body_hidden.rotateAngleY = entityIn.world.getTotalWorldTime();
             } else {
                 offsetValue = -0.09F;

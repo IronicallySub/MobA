@@ -36,7 +36,15 @@ public class ItemSheila extends ItemShield {
             if (entityIn instanceof EntityLivingBase) {
                 EntityLivingBase livingBase = (EntityLivingBase) entityIn;
 
-                if (timer == 100 && livingBase.isHandActive()) {
+                if (entityIn.isSneaking() && livingBase.isHandActive()) {
+                    timer++;
+                } else {
+                    timer = 0;
+                }
+                
+             
+                
+                if (timer == 100 && livingBase.isHandActive() && livingBase.getActiveItemStack() == stack) {
                     if (!worldIn.isRemote) {
                         EntityRock ball = new EntityRock(worldIn, livingBase);
                         ball.shoot(livingBase, livingBase.rotationPitch, livingBase.rotationYaw, 0.0F, 1.5F, 1.0F);
@@ -49,16 +57,16 @@ public class ItemSheila extends ItemShield {
                     livingBase.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 100, 1, true, false));
                 }
 
-                if (livingBase instanceof EntityPlayer && livingBase.isSneaking()) {
+                if (livingBase instanceof EntityPlayer) {
                     EntityPlayer player = (EntityPlayer) livingBase;
+                    
+                	if(timer > 100 && isSelected){
+                        player.sendStatusMessage(new TextComponentString("Full charge!"), true);               
+                    	}
+                    
+                    if(timer < 100 && livingBase.isSneaking()) {
                     player.sendStatusMessage(new TextComponentString("Charge time: " + timer), true);
-                }
-
-
-                if (entityIn.isSneaking()) {
-                    timer++;
-                } else {
-                    timer = 0;
+                } 
                 }
             }
         }

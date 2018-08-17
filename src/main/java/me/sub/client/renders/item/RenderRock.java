@@ -1,6 +1,9 @@
 
 package me.sub.client.renders.item;
 
+import java.util.Random;
+
+import lucraft.mods.lucraftcore.util.helper.LCRenderHelper;
 import me.sub.common.AObjects;
 import me.sub.common.entity.EntityRock;
 import net.minecraft.client.Minecraft;
@@ -10,6 +13,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.Vec3d;
 
 public class RenderRock extends RenderSnowball<EntityRock> {
 
@@ -28,7 +32,7 @@ public class RenderRock extends RenderSnowball<EntityRock> {
         for (int i = 0; i < 7; ++i) {
             entity.world.spawnParticle(EnumParticleTypes.FLAME, entity.posX + (entity.world.rand.nextDouble() - 0.5D) * (double) entity.width, entity.posY + entity.world.rand.nextDouble() * (double) entity.height, entity.posZ + (entity.world.rand.nextDouble() - 0.5D) * (double) entity.width, 0D, 0.0D, 0D);
         }
-
+        
         Minecraft.getMinecraft().getRenderItem().renderItem(this.getStackToRender(entity), ItemCameraTransforms.TransformType.GROUND);
         GlStateManager.enableFog();
         GlStateManager.enableLighting();
